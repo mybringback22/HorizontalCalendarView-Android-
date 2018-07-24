@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="40dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10">
+    <LinearLayout
+        android:layout_weight="4.5"
+        android:layout_width="40dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="T"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@color/grayTextColor"/>
+
+    </LinearLayout>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        android:background="#b7b8b9"/>
+
+    <LinearLayout
+        android:layout_weight="5.45"
+        android:layout_width="40dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:padding="2dp">
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="23"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:layout_gravity="center" />
+    </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_weight="0.7"
+        android:layout_width="40dp"
+        android:layout_height="0dp"
+        android:gravity="top|center_horizontal"
+        android:layout_gravity="top|center_horizontal">
+        <ImageView
+            android:layout_gravity="top"
+            android:id="@+id/have_appointment"
+            android:layout_width="17.5dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_three_dots"/>
+
+    </LinearLayout>
+
+</LinearLayout>

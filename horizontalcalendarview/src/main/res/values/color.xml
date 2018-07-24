@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="appointmentGray">#ececec  </color>
+    <color name="grayTextColor">#95989A</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+</resources>
