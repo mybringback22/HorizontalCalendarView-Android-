@@ -103,7 +103,7 @@ override fun updateMonthOnScroll(selectedDate: DayDateMonthYearModel?) {
 ```
 
 ### newDateSelected
-```java
+```kotlin
 override fun newDateSelected(selectedDate: DayDateMonthYearModel?) {
         Toast.makeText(CONTEXT ,selectedDate?.date +""+ selectedDate?.month + " " + selectedDate?.year , Toast.LENGTH_LONG).show()
 }
