@@ -13,14 +13,13 @@ class MainActivity : AppCompatActivity() , HorizontalCalendarListener  {
 
 
     lateinit var textView : TextView
-    lateinit var hcv : HorizontalCalendarView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         textView = findViewById(R.id.month)
 
-        hcv = findViewById(R.id.hcv)
+        val  hcv = findViewById<HorizontalCalendarView>(R.id.hcv)
         hcv.setContext(this@MainActivity)
         hcv.setBackgroundColor(resources.getColor(R.color.colorPrimary))
         hcv.showControls(false)
