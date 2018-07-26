@@ -3,7 +3,10 @@ Horizontal Calender View is a library for android.
 
 ## Demo 
 
-![](ss/DemoGif.gif){:height="50%" width="50%"}
+
+<img src="ss/DemoGif.gif" width="100" height="100">
+
+![](ss/DemoGif.gif)
 ![](ss/DemoGifTwo.gif)
 
 ## Adding Library To Ypur Project
