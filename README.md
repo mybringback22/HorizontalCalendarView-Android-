@@ -14,7 +14,7 @@ Horizontal Calender View is a library for android.
  -->
 
 
-## Adding Library To Ypur Project
+## Adding Library To Your Project
 ### Gradle
 
 Add following Block in root in `build.gradle(Module:app)`
@@ -52,7 +52,7 @@ Add the followling code to your XML file
 Now you can get the referance of the HorizontalCalendarView in the kotlin
 
 ```java 
-val  hcv = findViewById<HorizontalCalendarView>(R.id.hcv)
+val  hcv = findViewById<HorizontalCalendarView>(R.id.horizontalcalendarview)
 hcv.setContext(this@MainActivity)
 ```
 
@@ -97,7 +97,7 @@ Overide the following method
 ### updateMonthOnScroll
 ```java
 override fun updateMonthOnScroll(selectedDate: DayDateMonthYearModel?) {
-        currentMonth.textView.text = ""+ selectedDate?.month + " " + selectedDate?.year
+        currentMonthTextView.text = ""+ selectedDate?.month + " " + selectedDate?.year
 }
 
 ```
@@ -105,7 +105,7 @@ override fun updateMonthOnScroll(selectedDate: DayDateMonthYearModel?) {
 ### newDateSelected
 ```java
 override fun newDateSelected(selectedDate: DayDateMonthYearModel?) {
-        Toast.makeText(this@MainActivity ,selectedDate?.date +""+ selectedDate?.month + " " + selectedDate?.year , Toast.LENGTH_LONG).show()
+        Toast.makeText(CONTEXT ,selectedDate?.date +""+ selectedDate?.month + " " + selectedDate?.year , Toast.LENGTH_LONG).show()
 }
 
 ```
@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() , HorizontalCalendarListener  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         currentMonthTextView = findViewById(R.id.month)
-        val  hcv = findViewById<HorizontalCalendarView>(R.id.hcv)
+        val  hcv = findViewById<HorizontalCalendarView>(R.id.horizontalcalendarview)
         hcv.setContext(this@MainActivity)
         hcv.setBackgroundColor(resources.getColor(R.color.colorPrimary))
         hcv.showControls(false)
@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity() , HorizontalCalendarListener  {
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.view.calender.horizontal.umar.horizontalcalendarview.HorizontalCalendarView
-        android:id="@+id/hcv"
+        android:id="@+id/horizontalcalendarview"
         android:layout_width="match_parent"
         android:layout_height="100dp">
 

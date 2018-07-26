@@ -10,15 +10,11 @@ import com.view.calender.horizontal.umar.horizontalcalendarview.HorizontalCalend
 
 class MainActivity : AppCompatActivity() , HorizontalCalendarListener  {
 
-
-
     lateinit var textView : TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         textView = findViewById(R.id.month)
-
         val  hcv = findViewById<HorizontalCalendarView>(R.id.hcv)
         hcv.setContext(this@MainActivity)
         hcv.setBackgroundColor(resources.getColor(R.color.colorPrimary))
@@ -29,8 +25,8 @@ class MainActivity : AppCompatActivity() , HorizontalCalendarListener  {
     }
 
     override fun updateMonthOnScroll(selectedDate: DayDateMonthYearModel?) {
-//        Toast.makeText(this@MainActivity ,""+ selectedDate?.month + " " + selectedDate?.year , Toast.LENGTH_LONG).show()
-        textView.text = ""+ selectedDate?.month + " " + selectedDate?.year
+        val value =  ""+ selectedDate?.month + " " + selectedDate?.year
+        textView.text = value
 
     }
 
