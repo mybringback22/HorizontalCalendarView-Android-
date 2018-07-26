@@ -51,38 +51,38 @@ Add the followling code to your XML file
 
 Now you can get the referance of the HorizontalCalendarView in the kotlin
 
-```java 
+```kotlin 
 val  hcv = findViewById<HorizontalCalendarView>(R.id.horizontalcalendarview)
 hcv.setContext(this@MainActivity)
 ```
 
 To hide the left right contorls you can use the following method
 
-```java 
+```kotlin 
 hcv.showControls(false)
 ```
 
 To change the color of the left and right control use the following
 
-```java 
+```kotlin 
 hcv.setControlTint(R.color.colorAccent)
 ```
 
 To change the background color of the Horizontal Calendar View use the following
 
-```java 
+```kotlin 
 hcv.setBackgroundColor(resources.getColor(R.color.colorPrimary))
 ```
 
 To change the Text color of the Horizontal Calendar View use the following
 
-```java 
+```kotlin 
 hcv.changeAccent(R.color.white)
 ```
 
 ## Getting Swipe or Touch Feedback
 To get the feedback from the  touches and swipes of Calender implement ` HorizontalCalendarListener ` activity or fragment
-```java
+```kotlin
 class MainActivity : AppCompatActivity() , HorizontalCalendarListener  {
 
 }
@@ -95,7 +95,7 @@ Overide the following method
 - newDateSelected 
 
 ### updateMonthOnScroll
-```java
+```kotlin
 override fun updateMonthOnScroll(selectedDate: DayDateMonthYearModel?) {
         currentMonthTextView.text = ""+ selectedDate?.month + " " + selectedDate?.year
 }
@@ -126,7 +126,7 @@ public class DayDateMonthYearModel {
 
 ### Complete MainActivity.kt 
 
-```java
+```kotlin
 class MainActivity : AppCompatActivity() , HorizontalCalendarListener  {
 
 
