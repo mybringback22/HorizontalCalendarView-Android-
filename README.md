@@ -3,7 +3,7 @@ Horizontal Calender View is a library for android.
 
 ## Demo 
 
-![](ss/DemoGif.gif)
+![](ss/DemoGif.gif){:height="50%" width="50%"}
 ![](ss/DemoGifTwo.gif)
 
 ## Adding Library To Ypur Project
@@ -181,6 +181,7 @@ class MainActivity : AppCompatActivity() , HorizontalCalendarListener  {
     </com.view.calender.horizontal.umar.horizontalcalendarview.HorizontalCalendarView>
 
 </LinearLayout>
-``` 
-        
-        
+```
+
+## License
+MIT - License
