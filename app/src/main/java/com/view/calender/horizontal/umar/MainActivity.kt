@@ -18,15 +18,15 @@ class MainActivity : AppCompatActivity() , HorizontalCalendarListener  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        textView = findViewById(R.id.month);
+        textView = findViewById(R.id.month)
 
         hcv = findViewById(R.id.hcv)
         hcv.setContext(this@MainActivity)
-//        hcv.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-//        hcv.showControls(false)
-//        hcv.showControls(true)
+        hcv.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+        hcv.showControls(false)
+        hcv.showControls(true)
         hcv.setControlTint(R.color.colorAccent)
-//        hcv.changeAccent(R.color.white)
+        hcv.changeAccent(R.color.white)
     }
 
     override fun updateMonthOnScroll(selectedDate: DayDateMonthYearModel?) {

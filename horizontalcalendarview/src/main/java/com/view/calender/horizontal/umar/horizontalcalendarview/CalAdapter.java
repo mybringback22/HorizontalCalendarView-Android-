@@ -22,8 +22,8 @@ public class CalAdapter extends RecyclerView.Adapter<CalAdapter.MyViewHolder> {
     Object toCallBack;
 
     DayDateMonthYearModel lastDaySelected;
-    int color = R.color.black;
 
+    int color = R.color.black;
 
     ArrayList<DayDateMonthYearModel> dayModelList = new ArrayList<>();
     TextView clickedTextView = null;
@@ -34,8 +34,6 @@ public class CalAdapter extends RecyclerView.Adapter<CalAdapter.MyViewHolder> {
     public CalAdapter(Context context  , ArrayList<DayDateMonthYearModel> dayModelList   ){
         this.context = context;
         this.dayModelList  = dayModelList;
-
-
     }
 
     public void setCallback(Object toCallBack){
@@ -80,7 +78,6 @@ public class CalAdapter extends RecyclerView.Adapter<CalAdapter.MyViewHolder> {
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
-
         }
 
         holder.day.setText(t + " ");
@@ -119,8 +116,6 @@ public class CalAdapter extends RecyclerView.Adapter<CalAdapter.MyViewHolder> {
                 }
 
                 try {
-//                    Toast.makeText(context, "XX"+dayModelList.get(pos).year + "-" + dayModelList.get(pos).monthNumeric+"-"+dayModelList.get(pos).date, Toast.LENGTH_SHORT).show();
-
                     CallBack cb = new CallBack(toCallBack, "newDateSelected");
                     cb.invoke(dayModelList.get(pos));
                 } catch (InvocationTargetException e) {
