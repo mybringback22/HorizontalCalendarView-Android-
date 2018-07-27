@@ -19,7 +19,6 @@
             android:gravity="center"
             android:layout_gravity="center"
             android:textColor="@color/grayTextColor"/>
-
     </LinearLayout>
     <View
         android:id="@+id/divider"
@@ -27,7 +26,6 @@
         android:layout_height="0dp"
         android:layout_weight="0.05"
         android:background="#b7b8b9"/>
-
     <LinearLayout
         android:layout_weight="5.45"
         android:layout_width="40dp"
@@ -57,7 +55,5 @@
             android:layout_width="17.5dp"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_three_dots"/>
-
     </LinearLayout>
-
 </LinearLayout>

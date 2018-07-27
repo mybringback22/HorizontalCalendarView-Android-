@@ -162,7 +162,6 @@ public class HorizontalCalendarView extends LinearLayout{
                 currentDayMode.year = partsNextDate[2];
                 currentDayMode.monthNumeric = partsNextDate[3];
                 currentDayMode.isToday = false;
-
                 currentDayModelList.add(currentDayMode);
                 calAdapter = new CalAdapter(context , currentDayModelList);
                 linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
@@ -181,7 +180,6 @@ public class HorizontalCalendarView extends LinearLayout{
 //                        isLoading = true;
 //                        Toast.makeText(context, "Reached Left", Toast.LENGTH_SHORT).show();
 //                        loadPreviousPage( );
-
                     }
 
                     @Override
@@ -290,7 +288,6 @@ public class HorizontalCalendarView extends LinearLayout{
         this.context = context;
         init();
     }
-
 
     public void changeAccent(int color ){
         calAdapter.changeAccent(color );
