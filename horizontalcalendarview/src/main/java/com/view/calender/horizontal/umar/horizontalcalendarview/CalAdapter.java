@@ -2,12 +2,14 @@ package com.view.calender.horizontal.umar.horizontalcalendarview;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
@@ -15,128 +17,125 @@ import java.util.ArrayList;
  * Created by UManzoor on 11/28/2017.
  */
 
-public class CalAdapter extends RecyclerView.Adapter<CalAdapter.MyViewHolder> {
+public class CalAdapter<T extends CalAdapter.MyViewHolder> extends RecyclerView.Adapter<T> {
+    protected int itemWidthPx;
+    protected DayDateMonthYearModel lastDaySelected;
+    protected Context context;
+    protected int color = R.color.black;
+    private HorizontalCalendarListener toCallBack;
+    private TextView clickedTextView = null;
+    private ArrayList<TextView> dateArrayList = new ArrayList<>();
+    private ArrayList<TextView> dayArrayList = new ArrayList<>();
+    private ArrayList<View> dividerArrayList = new ArrayList<>();
+    private ArrayList<DayDateMonthYearModel> dayModelList;
+    private WeekNameMode weekMode = WeekNameMode.SHORT;
 
-    Context context;
-
-    Object toCallBack;
-
-    DayDateMonthYearModel lastDaySelected;
-
-    int color = R.color.black;
-
-    ArrayList<DayDateMonthYearModel> dayModelList = new ArrayList<>();
-    TextView clickedTextView = null;
-    ArrayList<TextView> dateArrayList = new ArrayList<>();
-    ArrayList<TextView> dayArrayList = new ArrayList<>();
-    ArrayList<View> dividerArrayList = new ArrayList<>();
-
-    public CalAdapter(Context context  , ArrayList<DayDateMonthYearModel> dayModelList   ){
+    public CalAdapter(Context context, ArrayList<DayDateMonthYearModel> dayModelList) {
         this.context = context;
-        this.dayModelList  = dayModelList;
+        this.dayModelList = dayModelList;
     }
 
-    public void setCallback(Object toCallBack){
+    public void setCallback(HorizontalCalendarListener toCallBack) {
         this.toCallBack = toCallBack;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView day, date;
-        public ImageView haveAppointment;
-        public View divider;
+    protected int getCustomLayout() {
+        return R.layout.custom_day_layout;
+    }
 
-        public MyViewHolder(View view) {
-            super(view);
-            day =  view.findViewById(R.id.day);
-            date =  view.findViewById(R.id.date);
-            haveAppointment =  view.findViewById(R.id.have_appointment);
-            divider =  view.findViewById(R.id.divider);
-
-        }
+    public void setItemWidth(int widthPx) {
+        this.itemWidthPx = widthPx;
     }
 
     @Override
-    public CalAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public T onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.custom_day_layout, parent, false);
-        return  new CalAdapter.MyViewHolder(itemView);
+                .inflate(getCustomLayout(), parent, false);
+        return getViewHolder(itemView);
+    }
+
+    @NonNull
+    protected T getViewHolder(View itemView) {
+        return (T) new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
-        char t = dayModelList.get(position).day.charAt(0);
-
-        if(dayModelList.get(position).isToday==true){
-            holder.date.setBackground(context.getResources().getDrawable(R.drawable.currect_date_background));
+    public void onBindViewHolder(final T holder, int position) {
+        String t = getWeekDayName(position);
+        holder.day.setTextColor(context.getResources().getColor(color));
+        holder.date.setTextColor(context.getResources().getColor(color));
+        if (dayModelList.get(position).isToday) {
+            updateSelectedItemUI(holder.itemView);
+            lastDaySelected = dayModelList.get(position);
             try {
                 CallBack cb = new CallBack(toCallBack, "newDateSelected");
                 cb.invoke(dayModelList.get(position));
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+            } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+                //non
             }
         }
 
         holder.day.setText(t + " ");
         holder.date.setText(dayModelList.get(position).date);
-        holder.date.setTag(position);
+        holder.itemView.setTag(position);
         dateArrayList.add(holder.date);
         dayArrayList.add(holder.day);
         dividerArrayList.add(holder.divider);
-        holder.day.setTextColor(context.getResources().getColor(color));
-        holder.date.setTextColor(context.getResources().getColor(color));
         holder.divider.setBackgroundColor(context.getResources().getColor(color));
-        holder.date.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int pos = Integer.valueOf( v.getTag().toString());
-                if(clickedTextView==null) {
-                    clickedTextView = (TextView) v;
-                    clickedTextView.setBackground(context.getResources().getDrawable(R.drawable.background_selected_day));
-                    clickedTextView.setTextColor(context.getResources().getColor(R.color.white));
-                    clickedTextView.setTypeface(clickedTextView.getTypeface(), Typeface.NORMAL);
-                }else{
-//                    if(!dayModelList.get(pos).isToday) {
-                    if(lastDaySelected!=null && lastDaySelected.isToday){
-                        clickedTextView.setBackground(context.getResources().getDrawable(R.drawable.currect_date_background));
-                        clickedTextView.setTextColor(context.getResources().getColor(R.color.white));
-                        clickedTextView.setTypeface(clickedTextView.getTypeface(), Typeface.NORMAL);
-                    }else{
-                        clickedTextView.setBackground(null);
-                        clickedTextView.setTextColor(context.getResources().getColor(R.color.grayTextColor));
-                        clickedTextView.setTypeface(clickedTextView.getTypeface(), Typeface.NORMAL);
-                    }
-                    clickedTextView = (TextView) v;
-                    clickedTextView.setBackground(context.getResources().getDrawable(R.drawable.background_selected_day));
-                    clickedTextView.setTextColor(context.getResources().getColor(R.color.white));
-                    clickedTextView.setTypeface(clickedTextView.getTypeface(), Typeface.NORMAL);
-                }
+                int pos = Integer.valueOf(v.getTag().toString());
+                updateSelectedItemUI(v);
 
                 try {
                     CallBack cb = new CallBack(toCallBack, "newDateSelected");
                     cb.invoke(dayModelList.get(pos));
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
+                } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+                    //non
                 }
-
-
-                lastDaySelected=dayModelList.get(pos);
-
-
-
+                lastDaySelected = dayModelList.get(pos);
             }
         });
-
-
     }
 
+    protected void updateSelectedItemUI(View root) {
+        TextView date = root.findViewById(R.id.date);
+        if (clickedTextView == null) {
+            clickedTextView = date;
+            clickedTextView.setBackground(context.getResources().getDrawable(R.drawable.background_selected_day));
+            clickedTextView.setTextColor(context.getResources().getColor(R.color.white));
+            clickedTextView.setTypeface(clickedTextView.getTypeface(), Typeface.NORMAL);
+        } else {
+//                    if(!dayModelList.get(pos).isToday) {
+            if (lastDaySelected != null && lastDaySelected.isToday) {
+                clickedTextView.setBackground(context.getResources().getDrawable(R.drawable.currect_date_background));
+                clickedTextView.setTextColor(context.getResources().getColor(R.color.white));
+                clickedTextView.setTypeface(clickedTextView.getTypeface(), Typeface.NORMAL);
+            } else {
+                clickedTextView.setBackground(null);
+                clickedTextView.setTextColor(context.getResources().getColor(R.color.grayTextColor));
+                clickedTextView.setTypeface(clickedTextView.getTypeface(), Typeface.NORMAL);
+            }
+            clickedTextView = date;
+            clickedTextView.setBackground(context.getResources().getDrawable(R.drawable.background_selected_day));
+            clickedTextView.setTextColor(context.getResources().getColor(R.color.white));
+            clickedTextView.setTypeface(clickedTextView.getTypeface(), Typeface.NORMAL);
+        }
+    }
+
+    private String getWeekDayName(int position) {
+        String day = dayModelList.get(position).day;
+        switch (weekMode) {
+            case SHORT:
+                return day.substring(0, 1);
+            case MEDIUM:
+                return day;
+            default:
+                //never happens
+                return null;
+        }
+    }
 
     @Override
     public int getItemCount() {
@@ -149,30 +148,58 @@ public class CalAdapter extends RecyclerView.Adapter<CalAdapter.MyViewHolder> {
     }
 
     @Override
-    public void onViewAttachedToWindow(MyViewHolder holder) {
+    public void onViewAttachedToWindow(T holder) {
         holder.setIsRecyclable(false);
         super.onViewAttachedToWindow(holder);
     }
 
     @Override
-    public void onViewDetachedFromWindow(MyViewHolder holder) {
+    public void onViewDetachedFromWindow(T holder) {
         holder.setIsRecyclable(false);
         super.onViewDetachedFromWindow(holder);
     }
 
-
-    public void changeAccent(int color ){
+    public void changeAccent(int color) {
         this.color = color;
-        for(int i = 0 ; i < dateArrayList.size()  ; i++){
+        for (int i = 0; i < dateArrayList.size(); i++) {
             dayArrayList.get(i).setTextColor(context.getResources().getColor(color));
             dateArrayList.get(i).setTextColor(context.getResources().getColor(color));
             dividerArrayList.get(i).setBackgroundColor(context.getResources().getColor(color));
         }
     }
 
+    protected void reloadData(CalAdapter adapter) {
+        if (adapter != null) {
+            adapter.context = this.context;
+            adapter.toCallBack = this.toCallBack;
+            adapter.changeAccent(this.color);
+        }
+    }
 
-//    public void addPrevious(DayDateMonthYearModel DDMYModel) {
-//        dayModelList.add(0,DDMYModel);
-//        notifyItemInserted(dayModelList.size() - 1);
-//    }
+    public void setWeekMode(WeekNameMode weekMode) {
+        this.weekMode = weekMode;
+    }
+
+    public enum WeekNameMode {
+        SHORT, MEDIUM
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView day, date;
+        public View background;
+        public View divider;
+        public View root;
+
+        public MyViewHolder(View view) {
+            super(view);
+            day = view.findViewById(R.id.day);
+            date = view.findViewById(R.id.date);
+            divider = view.findViewById(R.id.divider);
+            background = date;
+        }
+
+        protected void setBackgroundColor(Drawable drawable) {
+            background.setBackground(drawable);
+        }
+    }
 }
