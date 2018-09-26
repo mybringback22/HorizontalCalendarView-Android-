@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
  * Created by UManzoor on 11/28/2017.
  */
 
-public abstract class HorizontalPaginationScroller extends RecyclerView.OnScrollListener  {
+public abstract class HorizontalPaginationScroller extends RecyclerView.OnScrollListener {
     LinearLayoutManager layoutManager;
 
     public HorizontalPaginationScroller(LinearLayoutManager layoutManager) {
@@ -28,7 +28,7 @@ public abstract class HorizontalPaginationScroller extends RecyclerView.OnScroll
                     && firstVisibleItemPosition >= 0) {
                 loadMoreItems();
             }
-            if(layoutManager.findFirstCompletelyVisibleItemPosition()==0){
+            if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
                 loadMoreItemsOnLeft();
             }
 
@@ -38,7 +38,6 @@ public abstract class HorizontalPaginationScroller extends RecyclerView.OnScroll
     protected abstract void loadMoreItems();
 
     protected abstract void loadMoreItemsOnLeft();
-
 
     public abstract boolean isLoading();
 }

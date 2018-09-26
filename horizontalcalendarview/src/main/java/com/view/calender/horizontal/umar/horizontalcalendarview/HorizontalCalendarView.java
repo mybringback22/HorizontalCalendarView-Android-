@@ -1,6 +1,7 @@
 package com.view.calender.horizontal.umar.horizontalcalendarview;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -8,8 +9,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.view.calender.horizontal.umar.horizontalcalendarview.material.MaterialCalAdapter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
@@ -18,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class HorizontalCalendarView extends LinearLayout{
+public class HorizontalCalendarView extends LinearLayout {
 
 
     LinearLayout leftButton;
@@ -37,19 +41,34 @@ public class HorizontalCalendarView extends LinearLayout{
     Date date;
     Date datePrevious;
     LinearLayoutManager linearLayoutManager;
-    private boolean isLoading = false;
-
     LinearLayout mainBackground;
+    HorizontalCalendarListener toCallBack;
+    private boolean isLoading;
+    private Boolean changedToMaterial = null;
+    private int singleItemWidth;
+    private CalAdapter.WeekNameMode mode = CalAdapter.WeekNameMode.SHORT;
 
-    public void init(){
+    public HorizontalCalendarView(Context context) {
+        super(context);
+        this.context = context;
+        init();
+    }
+
+    public HorizontalCalendarView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+        init();
+    }
+
+    public void init() {
         rootView = inflate(context, R.layout.custom_calender_layout, this);
-        leftButton =  findViewById(R.id.swipe_left);
-        rightButton =  findViewById(R.id.swipe_right);
-        recyclerView =  findViewById(R.id.recycler_view);
-        mainBackground =  findViewById(R.id.main_background);
-        leftImage =  findViewById(R.id.left_image_view);
-        rightImage =  findViewById(R.id.right_image_view);
-        loadNextPage( );
+        leftButton = findViewById(R.id.swipe_left);
+        rightButton = findViewById(R.id.swipe_right);
+        recyclerView = findViewById(R.id.recycler_view);
+        mainBackground = findViewById(R.id.main_background);
+        leftImage = findViewById(R.id.left_image_view);
+        rightImage = findViewById(R.id.right_image_view);
+        loadNextPage();
         leftButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,12 +92,12 @@ public class HorizontalCalendarView extends LinearLayout{
                 int lastVisibleIndex = linearLayoutManager.findLastVisibleItemPosition();
                 int firstVisibleIndex = linearLayoutManager.findFirstVisibleItemPosition();
                 if (dx > 0) {
-                    for(int i = firstVisibleIndex ; i<lastVisibleIndex ; i++) {
+                    for (int i = firstVisibleIndex; i < lastVisibleIndex; i++) {
 
-                        if (currentDayModelList.get(i).month.compareTo(currentDayModelList.get(i+1).month) != 0) {
+                        if (currentDayModelList.get(i).month.compareTo(currentDayModelList.get(i + 1).month) != 0) {
                             try {
                                 CallBack cb = new CallBack(toCallBack, "updateMonthOnScroll");
-                                cb.invoke(currentDayModelList.get(i+1));
+                                cb.invoke(currentDayModelList.get(i + 1));
                             } catch (InvocationTargetException e) {
                                 e.printStackTrace();
                             } catch (IllegalAccessException e) {
@@ -89,9 +108,9 @@ public class HorizontalCalendarView extends LinearLayout{
                         }
                     }
                 } else if (dx < 0) {
-                    for(int i = lastVisibleIndex ; i>firstVisibleIndex ; i--) {
+                    for (int i = lastVisibleIndex; i > firstVisibleIndex; i--) {
 
-                        if (currentDayModelList.get(i).month.compareTo(currentDayModelList.get(i+1).month) != 0) {
+                        if (currentDayModelList.get(i).month.compareTo(currentDayModelList.get(i + 1).month) != 0) {
                             try {
                                 CallBack cb = new CallBack(toCallBack, "updateMonthOnScroll");
                                 cb.invoke(currentDayModelList.get(i));
@@ -111,15 +130,17 @@ public class HorizontalCalendarView extends LinearLayout{
         linearLayoutManager.scrollToPosition(27);
     }
 
-    public void loadNextPage( ){
-        if(calAdapter==null){
+    public void loadNextPage() {
+        if (changeCalAdapter()) {
+            recyclerView.setAdapter(calAdapter);
+        }
+        if (calAdapter == null) {
             currentDayModelList = new ArrayList<>();
             dateFormat = new SimpleDateFormat("MMMM-EEE-yyyy-MM-dd");
             date = new Date();
             //System.out.println("Day 1"+" "+dateFormat.format(date));
-            DayDateMonthYearModel currentDayModel=new DayDateMonthYearModel();
-            String currentDate=dateFormat.format(date).toString();
-            String[] parts = currentDate.split(" ");
+            DayDateMonthYearModel currentDayModel = new DayDateMonthYearModel();
+            String currentDate = dateFormat.format(date).toString();
             String[] partsDate = currentDate.split("-");
             currentDayModel.month = partsDate[0];
             currentDayModel.date = partsDate[4];
@@ -136,17 +157,17 @@ public class HorizontalCalendarView extends LinearLayout{
             for (int i = 0; i < 30; i++) {
                 calPrevious.add(Calendar.DAY_OF_WEEK, -1);
                 String nextDate = dateFormat.format(calPrevious.getTime());
-                DayDateMonthYearModel previousDayMode=new DayDateMonthYearModel();
-                String[] partsNextDate= nextDate.split("-");
+                DayDateMonthYearModel previousDayMode = new DayDateMonthYearModel();
+                String[] partsNextDate = nextDate.split("-");
                 previousDayMode.month = partsNextDate[0];
                 previousDayMode.date = partsNextDate[4];
                 previousDayMode.day = partsNextDate[1];
                 previousDayMode.year = partsNextDate[2];
                 previousDayMode.monthNumeric = partsNextDate[3];
-                previousDayMode.isToday= false;
+                previousDayMode.isToday = false;
                 isLoading = false;
 //                calAdapter.addPrevious(currentDayMode);
-                currentDayModelList.add(0,previousDayMode);
+                currentDayModelList.add(0, previousDayMode);
             }
             currentDayModelList.add(currentDayModel);
 
@@ -154,8 +175,8 @@ public class HorizontalCalendarView extends LinearLayout{
             for (int i = 0; i < 30; i++) {
                 cal.add(Calendar.DAY_OF_WEEK, 1);
                 String nextDate = dateFormat.format(cal.getTime());
-                DayDateMonthYearModel currentDayMode=new DayDateMonthYearModel();
-                String[] partsNextDate= nextDate.split("-");
+                DayDateMonthYearModel currentDayMode = new DayDateMonthYearModel();
+                String[] partsNextDate = nextDate.split("-");
                 currentDayMode.month = partsNextDate[0];
                 currentDayMode.date = partsNextDate[4];
                 currentDayMode.day = partsNextDate[1];
@@ -163,7 +184,7 @@ public class HorizontalCalendarView extends LinearLayout{
                 currentDayMode.monthNumeric = partsNextDate[3];
                 currentDayMode.isToday = false;
                 currentDayModelList.add(currentDayMode);
-                calAdapter = new CalAdapter(context , currentDayModelList);
+                calAdapter = newCalAdapter();
                 linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                 recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -189,41 +210,86 @@ public class HorizontalCalendarView extends LinearLayout{
                 };
                 recyclerView.addOnScrollListener(horizontalPaginationScroller);
             }
-        }else{
+        } else {
             for (int i = 0; i < 30; i++) {
                 cal.add(Calendar.DAY_OF_WEEK, 1);
                 String nextDate = dateFormat.format(cal.getTime());
-                DayDateMonthYearModel currentDayMode=new DayDateMonthYearModel();
-                String[] partsNextDate= nextDate.split("-");
+                DayDateMonthYearModel currentDayMode = new DayDateMonthYearModel();
+                String[] partsNextDate = nextDate.split("-");
                 currentDayMode.month = partsNextDate[0];
                 currentDayMode.date = partsNextDate[4];
                 currentDayMode.day = partsNextDate[1];
                 currentDayMode.year = partsNextDate[2];
-                currentDayMode.isToday= false;
+                currentDayMode.isToday = false;
                 isLoading = false;
                 calAdapter.add(currentDayMode);
             }
         }
     }
 
-    public HorizontalCalendarView(Context context) {
-        super(context);
-        this.context = context;
-        init();
+    private boolean changeCalAdapter() {
+        boolean res = false;
+        if (calAdapter != null) {
+            if (changedToMaterial != null) {
+                calAdapter = newCalAdapter();
+                res = true;
+            }
+            calAdapter.setWeekMode(mode);
+        }
+        return res;
     }
 
+    @NonNull
+    private CalAdapter newCalAdapter() {
+        if (changedToMaterial == null) {
+            changedToMaterial = false;
+        }
+        CalAdapter res = changedToMaterial ? new MaterialCalAdapter(context, currentDayModelList) : new CalAdapter(context, currentDayModelList);
+        reinitCalAdapterData(res);
+        changedToMaterial = null;
+        return res;
+    }
 
-    public void setBackgroundColor(int color){
+    private void reinitCalAdapterData(final CalAdapter res) {
+        if (calAdapter != null) {
+            calAdapter.reloadData(res);
+        }
+        setNewRecyclerItemWidth(res);
+    }
+
+    private void setNewRecyclerItemWidth(final CalAdapter res) {
+        if (singleItemWidth == 0) {
+            recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            singleItemWidth = recyclerView.getWidth() / 7;
+                            updateRecyclerItemWidth(res);
+                            res.notifyDataSetChanged();
+                        }
+                    }
+            );
+        } else {
+            updateRecyclerItemWidth(res);
+        }
+    }
+
+    private void updateRecyclerItemWidth(CalAdapter res) {
+        res.setItemWidth(singleItemWidth);
+    }
+
+    public void setBackgroundColor(int color) {
         mainBackground.setBackgroundColor(color);
     }
 
-    public void setControlTint(int color){
+    public void setControlTint(int color) {
         rightImage.setColorFilter(ContextCompat.getColor(context, color), android.graphics.PorterDuff.Mode.SRC_IN);
         leftImage.setColorFilter(ContextCompat.getColor(context, color), android.graphics.PorterDuff.Mode.SRC_IN);
-}
+    }
 
-    public void showControls(boolean show){
-        if(show){
+    public void showControls(boolean show) {
+        if (show) {
             leftButton.setVisibility(VISIBLE);
             rightButton.setVisibility(VISIBLE);
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
@@ -242,28 +308,30 @@ public class HorizontalCalendarView extends LinearLayout{
             rightButton.setLayoutParams(paramTwo);
             recyclerView.setLayoutParams(param);
 
-        }else{
+        } else {
             leftButton.setVisibility(GONE);
             rightButton.setVisibility(GONE);
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                     LayoutParams.MATCH_PARENT,
-                    LayoutParams.MATCH_PARENT,
-                    10.0f
-            );
+                    LayoutParams.WRAP_CONTENT);
             recyclerView.setLayoutParams(param);
+        }
+        askForRecalculateItemWidth();
+    }
+
+    private void askForRecalculateItemWidth() {
+        singleItemWidth = 0;
+        if (calAdapter != null) {
+            setNewRecyclerItemWidth(calAdapter);
         }
     }
 
-    Object toCallBack ;
-
-    public void setContext( Object toCallBack){
+    public void setContext(HorizontalCalendarListener toCallBack) {
         this.toCallBack = toCallBack;
         calAdapter.setCallback(toCallBack);
         Date date = new Date();
-        //System.out.println("Day 1"+" "+dateFormat.format(date));
-        DayDateMonthYearModel currentDayModel=new DayDateMonthYearModel();
-        String currentDate=dateFormat.format(date).toString();
-        String[] parts = currentDate.split(" ");
+        DayDateMonthYearModel currentDayModel = new DayDateMonthYearModel();
+        String currentDate = dateFormat.format(date).toString();
         String[] partsDate = currentDate.split("-");
         currentDayModel.month = partsDate[0];
         currentDayModel.date = partsDate[4];
@@ -274,22 +342,24 @@ public class HorizontalCalendarView extends LinearLayout{
         try {
             CallBack cb = new CallBack(toCallBack, "updateMonthOnScroll");
             cb.invoke(currentDayModel);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
         }
     }
 
-    public HorizontalCalendarView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        this.context = context;
-        init();
+    public void changeAccent(int color) {
+        calAdapter.changeAccent(color);
     }
 
-    public void changeAccent(int color ){
-        calAdapter.changeAccent(color );
+    public void setMaterialStyle(boolean isMaterial) {
+        this.changedToMaterial = isMaterial;
+        loadNextPage();
+    }
+
+    public void setWeekNameMode(CalAdapter.WeekNameMode mode) {
+        this.mode = mode;
+        if (calAdapter != null) {
+            calAdapter.setWeekMode(mode);
+            calAdapter.notifyDataSetChanged();
+        }
     }
 }
