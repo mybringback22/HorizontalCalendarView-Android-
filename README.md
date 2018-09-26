@@ -14,26 +14,6 @@ Horizontal Calender View is a library for android.
 ![](ss/DemoGifTwo.gif)
  -->
 
-
-## Adding Library To Your Project
-### Gradle
-
-Add following Block in root in `build.gradle(Module:app)`
-
-``` 
-allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
-
-Add following line in the dependencies block in `build.gradle(Module:app)`
-
-``` 
-implementation 'com.github.mybringback22:HorizontalCalendarView-Android-:0.1.0'
-```
-
 ## Using Horizontal Calendar View
 ### XML 
 
@@ -61,6 +41,18 @@ To hide the left right contorls you can use the following method
 
 ```kotlin 
 hcv.showControls(false)
+```
+
+To turn on material style UI (third screenshot)
+
+```kotlin 
+hcv.setMaterialStyle(true)
+```
+
+To change week days namming from M, T, W, T, F, S, S to Mon, Tue, Wed, Th, Fri, Sat, Sun 
+
+```kotlin 
+hcv.setWeekNameMode(CalAdapter.WeekNameMode.MEDIUM)
 ```
 
 To change the color of the left and right control use the following
