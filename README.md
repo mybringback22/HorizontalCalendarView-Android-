@@ -1,5 +1,5 @@
 # Horizontal Calendar View - Android
-Horizontal Calender View is a library for android.
+Horizontal Calender View is android library.
 
 ## Demo 
 
