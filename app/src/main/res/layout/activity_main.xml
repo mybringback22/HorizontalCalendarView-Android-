@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".MainActivity"
-android:orientation="vertical"
-android:gravity="center_horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:text="Current Month"
         android:textSize="20sp"
-        android:gravity="center_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -23,7 +23,7 @@ android:gravity="center_horizontal">
     <com.view.calender.horizontal.umar.horizontalcalendarview.HorizontalCalendarView
         android:id="@+id/hcv"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="85dp">
 
     </com.view.calender.horizontal.umar.horizontalcalendarview.HorizontalCalendarView>
 
@@ -31,7 +31,7 @@ android:gravity="center_horizontal">
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hide Controls"/>
+        android:text="Hide Controls" />
 
 
 </LinearLayout>
